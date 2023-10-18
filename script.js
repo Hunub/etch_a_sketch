@@ -1,40 +1,55 @@
 const mainDiv = document.querySelector("#main");
 
 const boardDiv = document.createElement("div");
-boardDiv.setAttribute('style', 'width: 640px; height: 640px; background: red;');
-
-
-// let pixelNum = prompt("Enter a number");
-
+boardDiv.setAttribute('style', 'width: 640px; height: 640px; display: flex; flex-direction: column;');
 mainDiv.appendChild(boardDiv);
 
-let mousePressed = false;
+let pixelNum = prompt("Enter a number");
 
-
-document.addEventListener('mousedown', () => {
-        mousePressed = true;
-        // console.log(mousePressed);
-})
-document.addEventListener('mouseup', () => {
-        mousePressed = false;
-        // console.log(mousePressed);
-})
-document.addEventListener('mouseleave', () => {
-        mousePressed = false;
-        // console.log(mousePressed);
-})   
-
-
-function penBlk(){
-   
-    if(mousePressed){
-        boardDiv.style.background="blue";
+for(let i = 1; i<=pixelNum; i++){
+    const boardDivRow = document.createElement('div');
+    boardDiv.appendChild(boardDivRow);
+    boardDivRow.setAttribute('style','display: flex; flex: 1;');
+    for(let j = 1; j<=pixelNum; j++){
+        const boardDivUnit = document.createElement('div');
+        boardDivRow.appendChild(boardDivUnit);
+        boardDivUnit.setAttribute('class', 'pixel');
+        boardDivUnit.setAttribute('style', 'width: 100%; height: 100%; background: white; flex: 1;')
     }
 }
 
+const  boardUnits = document.querySelectorAll(".pixel");
 
-boardDiv.addEventListener('click', ()=>{
-    boardDiv.style.background="blue";
-});
-boardDiv.addEventListener('mouseover', penBlk);
+let mousePressed = false;
 
+document.addEventListener('mousedown', () => {
+        mousePressed = true;
+})
+document.addEventListener('mouseup', () => {
+        mousePressed = false;
+})
+document.addEventListener('mouseleave', () => {
+        mousePressed = false;
+})   
+
+function penBlue(node){
+    node.style.background="blue";
+}
+
+
+let colorChoice = prompt("color:");
+
+function colorPen(color){
+    for(let k=0; k<boardUnits.length; k++){
+        boardUnits[k].addEventListener('click', function(e){
+            e.target.style.background= color;
+        });
+        boardUnits[k].addEventListener('mouseover', (e)=>{
+        if(mousePressed){
+            e.target.style.background= color;
+        }
+    });
+    }
+}
+
+colorPen(colorChoice);
