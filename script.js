@@ -32,24 +32,25 @@ document.addEventListener('mouseleave', () => {
         mousePressed = false;
 })   
 
-function penBlue(node){
-    node.style.background="blue";
-}
-
 
 let colorChoice = prompt("color:");
 
 function colorPen(color){
     for(let k=0; k<boardUnits.length; k++){
-        boardUnits[k].addEventListener('click', function(e){
-            e.target.style.background= color;
+        boardUnits[k].addEventListener('mousedown', (e)=>{
+            pen(e,color);
         });
         boardUnits[k].addEventListener('mouseover', (e)=>{
         if(mousePressed){
-            e.target.style.background= color;
+            pen(e,color);
         }
     });
     }
 }
 
 colorPen(colorChoice);
+
+let alpha = 0;
+function pen(element,color){
+    element.target.style.background= color;
+}
