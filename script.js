@@ -5,6 +5,33 @@ const boardDiv = document.createElement("div");
 boardDiv.setAttribute('style', 'width: 640px; height: 640px; display: flex; flex-direction: column;');
 mainDiv.appendChild(boardDiv);
 
+//create function of drawing pen;
+function pen(event,color){
+    event.target.style.background= color;
+};
+
+
+//create function of marker pen;
+
+function marker(event,color){
+    let exColor = event.target.style.backgroundColor;
+    let alpha = Math.min(0.1 + getAlpha(exColor),1);
+    event.target.style.background = `${color.slice(0,color.length-1)},${alpha})`;
+    
+};
+
+let mode ='';
+
+function fillColor(e,colorChoice){
+    if(mode === 'pen'){
+        pen(e,colorChoice);
+    }else if(mode === 'marker'){
+        marker(e,colorChoice)
+    }else if(mode === 'eraser'){
+        e.target.style.background = 'rgba(255,255,255,0.1)';
+    }
+}
+
 let pixelNum = prompt("Enter a number");
 
 for(let i = 1; i<=pixelNum; i++){
@@ -16,8 +43,17 @@ for(let i = 1; i<=pixelNum; i++){
         boardDivRow.appendChild(boardDivUnit);
         boardDivUnit.setAttribute('class', 'pixel');
         boardDivUnit.setAttribute('style', 'width: 100%; height: 100%; background: rgba(255,255,255,0.1); flex: 1;')
+        boardDivUnit.addEventListener('mousedown', (e)=>{
+            fillColor(e,colorChoice);
+        });
+        boardDivUnit.addEventListener('mouseover', (e)=>{
+            if(mousePressed){
+                fillColor(e,colorChoice);
+            };
+        });
     }
 }
+
 
 const  boardUnits = document.querySelectorAll(".pixel");
 
@@ -49,7 +85,6 @@ function hex2rgb(hex) {
 colorPicker.addEventListener("input", function() {
     colorChoice = `rgb(${hex2rgb(`${this.value}`)})`;
     console.log(colorChoice);
-//    choosePen(colorChoice);
 });
 
 
@@ -70,61 +105,20 @@ function getAlpha(color){
     }
 };
 
-//create function of drawing pen;
-function pen(event,color){
-    event.target.style.background= color;
-};
-
-
-//create function of marker pen;
-
-function marker(event,color){
-    let exColor = event.target.style.backgroundColor;
-    let alpha = Math.min(0.1 + getAlpha(exColor),1);
-    event.target.style.background = `${color.slice(0,color.length-1)},${alpha})`;
-    
-};
-
-//create named functions for event listeners for removal in future;
-function penMD(e){
-    pen(e,colorChoice);
-};
-function penMO(e){
-    if(mousePressed){
-        pen(e,colorChoice);
-    };
-};
-
-function markerMD(e){
-    marker(e,colorChoice);
-};
-function markerMO(e){
-    if(mousePressed){
-        marker(e,colorChoice);
-    };
-};
-
-//create choosing tool buttons
-function choosePen(){
-    for(let k=0; k<boardUnits.length; k++){
-        boardUnits[k].addEventListener('mousedown', penMD);
-        boardUnits[k].addEventListener('mouseover', penMO);
-    }
-}
-
-function chooseMarker(){
-    for(let k=0; k<boardUnits.length; k++){
-        boardUnits[k].removeEventListener('mousedown', penMD);
-        boardUnits[k].removeEventListener('mouseover', penMO);
-        boardUnits[k].addEventListener('mousedown', markerMD);
-        boardUnits[k].addEventListener('mouseover', markerMO);
-    }
-}
 
 
 const penBtn = document.querySelector('#pen');
 penBtn.addEventListener('click',()=>{
-    choosePen(colorChoice)});
+    mode = 'pen';});
 const markerBtn = document.querySelector('#marker');
 markerBtn.addEventListener('click',()=>{
-    chooseMarker(colorChoice)});
+    mode = 'marker';});
+const eraserBtn = document.querySelector('#eraser');
+eraserBtn.addEventListener('click',()=>{
+    mode = 'eraser';})
+const clearBtn = document.querySelector('#clear');
+clearBtn.addEventListener('click',()=>{
+    for(let k=0; k<boardUnits.length; k++){
+        boardUnits[k].style.background = 'rgba(255,255,255,0.1)';
+    };
+});
