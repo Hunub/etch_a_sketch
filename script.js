@@ -1,3 +1,4 @@
+//drawing board creation
 const mainDiv = document.querySelector("#main");
 
 const boardDiv = document.createElement("div");
@@ -14,12 +15,13 @@ for(let i = 1; i<=pixelNum; i++){
         const boardDivUnit = document.createElement('div');
         boardDivRow.appendChild(boardDivUnit);
         boardDivUnit.setAttribute('class', 'pixel');
-        boardDivUnit.setAttribute('style', 'width: 100%; height: 100%; background: white; flex: 1;')
+        boardDivUnit.setAttribute('style', 'width: 100%; height: 100%; background: rgba(255,255,255,0.1); flex: 1;')
     }
 }
 
 const  boardUnits = document.querySelectorAll(".pixel");
 
+// add overall eventlistener for drawing;
 let mousePressed = false;
 
 document.addEventListener('mousedown', () => {
@@ -32,6 +34,26 @@ document.addEventListener('mouseleave', () => {
         mousePressed = false;
 })   
 
+//create function of drawing pen;
+function pen(event,color){
+    event.target.style.background= color;
+};
+
+function fill(color){
+    for(let k=0; k<boardUnits.length; k++){
+        boardUnits[k].addEventListener('mousedown', (e)=>{
+            marker(e,color);
+        });
+        boardUnits[k].addEventListener('mouseover', (e)=>{
+        if(mousePressed){
+            marker(e,color);
+        }
+    });
+    }
+}
+
+//create color picker function; 
+//asign eventlisteners to all div units;
 const colorPicker = document.getElementById("color-picker");
 
 let colorChoice;
@@ -44,37 +66,38 @@ function hex2rgb(hex) {
 colorPicker.addEventListener("input", function() {
     colorChoice = `rgb(${hex2rgb(`${this.value}`)})`;
     console.log(colorChoice);
-    colorPen(colorChoice);
+    fill(colorChoice);
 });
 
-function pen(event,color){
-    event.target.style.background= color;
-};
 
-function colorPen(color){
-    for(let k=0; k<boardUnits.length; k++){
-        boardUnits[k].addEventListener('mousedown', (e)=>{
-            pen(e,color);
-        });
-        boardUnits[k].addEventListener('mouseover', (e)=>{
-        if(mousePressed){
-            pen(e,color);
-        }
-    });
+//create alpha adding algorithm to add 0.1 alpha each time; 
+
+function getAlpha(color){
+    let value1 = color.slice(0,color.length-1).split('(');
+    console.log(value1);
+    let value = value1[1].split(', ');
+    console.log(value);
+    let length = value.length;
+    console.log(length);
+    if(length === 3){
+      return 1.0;
     }
-}
+    if(length === 4){
+      return value[3]*1;
+    }
+};
 
 
-let alpha = 0;
-
-
-
-function marker(element,color){
-    let exColor = element.target.style.color;
+function marker(event,color){
+    let exColor = event.target.style.backgroundColor;
     console.log(exColor);
-    element.target.style.background= color;
+  
+    let alpha = Math.min(0.1 + getAlpha(exColor),1);
+    console.log(getAlpha(exColor));
+    console.log(typeof getAlpha(exColor));
+    console.log(alpha);
+    console.log(`${color.slice(0,color.length-1)},${alpha})`);
+    event.target.style.background = `${color.slice(0,color.length-1)},${alpha})`;
+    
 };
 
-function addAlpha(string){
-    return string + "1.0";
-};
