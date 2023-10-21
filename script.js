@@ -34,29 +34,12 @@ document.addEventListener('mouseleave', () => {
         mousePressed = false;
 })   
 
-//create function of drawing pen;
-function pen(event,color){
-    event.target.style.background= color;
-};
-
-function fill(color){
-    for(let k=0; k<boardUnits.length; k++){
-        boardUnits[k].addEventListener('mousedown', (e)=>{
-            marker(e,color);
-        });
-        boardUnits[k].addEventListener('mouseover', (e)=>{
-        if(mousePressed){
-            marker(e,color);
-        }
-    });
-    }
-}
 
 //create color picker function; 
 //asign eventlisteners to all div units;
 const colorPicker = document.getElementById("color-picker");
 
-let colorChoice;
+let colorChoice = 'rgb(0,0,0)';
 
 function hex2rgb(hex) {
     return ['0x' + hex[1] + hex[2] | 0, '0x' + hex[3] + hex[4] | 0, '0x' + hex[5] + hex[6] | 0];
@@ -66,7 +49,7 @@ function hex2rgb(hex) {
 colorPicker.addEventListener("input", function() {
     colorChoice = `rgb(${hex2rgb(`${this.value}`)})`;
     console.log(colorChoice);
-    fill(colorChoice);
+//    choosePen(colorChoice);
 });
 
 
@@ -87,17 +70,61 @@ function getAlpha(color){
     }
 };
 
+//create function of drawing pen;
+function pen(event,color){
+    event.target.style.background= color;
+};
+
+
+//create function of marker pen;
 
 function marker(event,color){
     let exColor = event.target.style.backgroundColor;
-    console.log(exColor);
-  
     let alpha = Math.min(0.1 + getAlpha(exColor),1);
-    console.log(getAlpha(exColor));
-    console.log(typeof getAlpha(exColor));
-    console.log(alpha);
-    console.log(`${color.slice(0,color.length-1)},${alpha})`);
     event.target.style.background = `${color.slice(0,color.length-1)},${alpha})`;
     
 };
 
+//create named functions for event listeners for removal in future;
+function penMD(e){
+    pen(e,colorChoice);
+};
+function penMO(e){
+    if(mousePressed){
+        pen(e,colorChoice);
+    };
+};
+
+function markerMD(e){
+    marker(e,colorChoice);
+};
+function markerMO(e){
+    if(mousePressed){
+        marker(e,colorChoice);
+    };
+};
+
+//create choosing tool buttons
+function choosePen(){
+    for(let k=0; k<boardUnits.length; k++){
+        boardUnits[k].addEventListener('mousedown', penMD);
+        boardUnits[k].addEventListener('mouseover', penMO);
+    }
+}
+
+function chooseMarker(){
+    for(let k=0; k<boardUnits.length; k++){
+        boardUnits[k].removeEventListener('mousedown', penMD);
+        boardUnits[k].removeEventListener('mouseover', penMO);
+        boardUnits[k].addEventListener('mousedown', markerMD);
+        boardUnits[k].addEventListener('mouseover', markerMO);
+    }
+}
+
+
+const penBtn = document.querySelector('#pen');
+penBtn.addEventListener('click',()=>{
+    choosePen(colorChoice)});
+const markerBtn = document.querySelector('#marker');
+markerBtn.addEventListener('click',()=>{
+    chooseMarker(colorChoice)});
