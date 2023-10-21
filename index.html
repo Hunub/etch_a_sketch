@@ -17,6 +17,19 @@
             flex: 1 0 640px;
             border: solid rgb(44, 41, 41) 2px;
         }
+        #size {
+            display: inline-block;
+            margin: 0 12px;
+            width: 64px;
+        }
+        #top-control{
+            height: 32px;
+            margin: 8px;
+
+        }
+        #slider-button{
+            margin: 0 8px;
+        }
     </style>
 </head>
 <body onload = "genCanvas()" ondragstart="return false;" ondrop="return false;">
@@ -25,14 +38,20 @@
     <div id = "main">
     </div>
     <div id = "control">
-        <input id="slider" type="range" value="16" min="-64" max="-1"/>
-        <button id="slider-button">CONFIRM</button>
-        <label for="color-picker">Select a color:</label>
-        <input id="color-picker" type="color">
-        <button id="pen">PEN</button>
-        <button id="marker">MARKER</button>
-        <button id="eraser">ERASER</button>
-        <button id="clear">CLEAR</button>
+        <div id = 'top-control'>
+            <p id="size"></p>
+            <input id="slider" type="range" value="8" min="2" max="64"/>
+            <button id="slider-button">CONFIRM</button>
+            <label for="color-picker">Select a color:</label>
+            <input id="color-picker" type="color">
+        </div>
+        <div id = 'bottom-control'>
+            <button id="pen">PEN</button>
+            <button id="marker">MARKER</button>
+            <button id="eraser">ERASER</button>
+            <button id="clear">CLEAR</button>
+        </div>
+
     </div>
 </body>
 </html>

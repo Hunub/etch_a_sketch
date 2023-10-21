@@ -16,7 +16,7 @@ function marker(event,color){
     
 };
 
-let mode ='';
+let mode ='pen';
 let colorChoice = 'rgb(0,0,0)';
 let pixelNum = 16;
 
@@ -31,16 +31,20 @@ function fillColor(e,colorChoice){
     }
 }
 
+const slider = document.getElementById('slider');
+const sizeDisplay =document.getElementById('size');
+slider.onmousemove = (e)=>{
+    sizeDisplay.textContent = `${e.target.value} × ${e.target.value}`;
+}  
+
 function genCanvas(){
-    let sValue = document.getElementById('slider').value;
-    pixelNum = Math.abs(sValue);
+    pixelNum = slider.value;
+    sizeDisplay.textContent = `${pixelNum} × ${pixelNum}`;
     if(mainDiv.firstChild){mainDiv.removeChild(mainDiv.firstChild);
     };
-        const boardDiv = document.createElement("div");
-        boardDiv.setAttribute('style', 'width: 640px; height: 640px; display: flex; flex-direction: column;');
-        mainDiv.appendChild(boardDiv);
-
- 
+    const boardDiv = document.createElement("div");
+    boardDiv.setAttribute('style', 'width: 640px; height: 640px; display: flex; flex-direction: column;');
+    mainDiv.appendChild(boardDiv);
 
     for(let i = 1; i<=pixelNum; i++){
         const boardDivRow = document.createElement('div');
@@ -62,10 +66,6 @@ function genCanvas(){
         }
     }
 }
-
-
-
-
 
 
 
@@ -92,11 +92,8 @@ colorPicker.addEventListener("input", function() {
 
 function getAlpha(color){
     let value1 = color.slice(0,color.length-1).split('(');
-    console.log(value1);
     let value = value1[1].split(', ');
-    console.log(value);
     let length = value.length;
-    console.log(length);
     if(length === 3){
       return 1.0;
     }
