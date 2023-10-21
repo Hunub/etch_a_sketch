@@ -32,8 +32,24 @@ document.addEventListener('mouseleave', () => {
         mousePressed = false;
 })   
 
+const colorPicker = document.getElementById("color-picker");
 
-let colorChoice = prompt("color:");
+let colorChoice;
+
+function hex2rgb(hex) {
+    return ['0x' + hex[1] + hex[2] | 0, '0x' + hex[3] + hex[4] | 0, '0x' + hex[5] + hex[6] | 0];
+    }
+    // hex2rgb @ https://stackoverflow.com/a/14101452
+
+colorPicker.addEventListener("input", function() {
+    colorChoice = `rgb(${hex2rgb(`${this.value}`)})`;
+    console.log(colorChoice);
+    colorPen(colorChoice);
+});
+
+function pen(event,color){
+    event.target.style.background= color;
+};
 
 function colorPen(color){
     for(let k=0; k<boardUnits.length; k++){
@@ -48,9 +64,17 @@ function colorPen(color){
     }
 }
 
-colorPen(colorChoice);
 
 let alpha = 0;
-function pen(element,color){
+
+
+
+function marker(element,color){
+    let exColor = element.target.style.color;
+    console.log(exColor);
     element.target.style.background= color;
-}
+};
+
+function addAlpha(string){
+    return string + "1.0";
+};
