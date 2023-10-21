@@ -1,17 +1,13 @@
 //drawing board creation
 const mainDiv = document.querySelector("#main");
 
-const boardDiv = document.createElement("div");
-boardDiv.setAttribute('style', 'width: 640px; height: 640px; display: flex; flex-direction: column;');
-mainDiv.appendChild(boardDiv);
+// const boardDiv = document.createElement("div");
+// boardDiv.setAttribute('style', 'width: 640px; height: 640px; display: flex; flex-direction: column;');
+// mainDiv.appendChild(boardDiv);
 
-//create function of drawing pen;
 function pen(event,color){
     event.target.style.background= color;
 };
-
-
-//create function of marker pen;
 
 function marker(event,color){
     let exColor = event.target.style.backgroundColor;
@@ -21,6 +17,9 @@ function marker(event,color){
 };
 
 let mode ='';
+let colorChoice = 'rgb(0,0,0)';
+let pixelNum = 16;
+
 
 function fillColor(e,colorChoice){
     if(mode === 'pen'){
@@ -32,50 +31,52 @@ function fillColor(e,colorChoice){
     }
 }
 
-let pixelNum = prompt("Enter a number");
+function genCanvas(){
+    let sValue = document.getElementById('slider').value;
+    pixelNum = Math.abs(sValue);
+    if(mainDiv.firstChild){mainDiv.removeChild(mainDiv.firstChild);
+    };
+        const boardDiv = document.createElement("div");
+        boardDiv.setAttribute('style', 'width: 640px; height: 640px; display: flex; flex-direction: column;');
+        mainDiv.appendChild(boardDiv);
 
-for(let i = 1; i<=pixelNum; i++){
-    const boardDivRow = document.createElement('div');
-    boardDiv.appendChild(boardDivRow);
-    boardDivRow.setAttribute('style','display: flex; flex: 1;');
-    for(let j = 1; j<=pixelNum; j++){
-        const boardDivUnit = document.createElement('div');
-        boardDivRow.appendChild(boardDivUnit);
-        boardDivUnit.setAttribute('class', 'pixel');
-        boardDivUnit.setAttribute('style', 'width: 100%; height: 100%; background: rgba(255,255,255,0.1); flex: 1;')
-        boardDivUnit.addEventListener('mousedown', (e)=>{
-            fillColor(e,colorChoice);
-        });
-        boardDivUnit.addEventListener('mouseover', (e)=>{
-            if(mousePressed){
+ 
+
+    for(let i = 1; i<=pixelNum; i++){
+        const boardDivRow = document.createElement('div');
+        boardDiv.appendChild(boardDivRow);
+        boardDivRow.setAttribute('style','display: flex; flex: 1;');
+        for(let j = 1; j<=pixelNum; j++){
+            const boardDivUnit = document.createElement('div');
+            boardDivRow.appendChild(boardDivUnit);
+            boardDivUnit.setAttribute('class', 'pixel');
+            boardDivUnit.setAttribute('style', 'background: rgba(255,255,255,0.1); flex: 1;')
+            boardDivUnit.addEventListener('mousedown', (e)=>{
                 fillColor(e,colorChoice);
-            };
-        });
+            });
+            boardDivUnit.addEventListener('mouseover', (e)=>{
+                if(mousePressed){
+                    fillColor(e,colorChoice);
+                };
+            });
+        }
     }
 }
 
 
-const  boardUnits = document.querySelectorAll(".pixel");
+
+
+
+
 
 // add overall eventlistener for drawing;
 let mousePressed = false;
 
-document.addEventListener('mousedown', () => {
-        mousePressed = true;
-})
-document.addEventListener('mouseup', () => {
-        mousePressed = false;
-})
-document.addEventListener('mouseleave', () => {
-        mousePressed = false;
-})   
+document.addEventListener('mousedown', () => {mousePressed = true;})
+document.addEventListener('mouseup', () => {mousePressed = false;})
+document.addEventListener('mouseleave', () => {mousePressed = false;})   
 
-
-//create color picker function; 
-//asign eventlisteners to all div units;
 const colorPicker = document.getElementById("color-picker");
-
-let colorChoice = 'rgb(0,0,0)';
 
 function hex2rgb(hex) {
     return ['0x' + hex[1] + hex[2] | 0, '0x' + hex[3] + hex[4] | 0, '0x' + hex[5] + hex[6] | 0];
@@ -84,7 +85,6 @@ function hex2rgb(hex) {
 
 colorPicker.addEventListener("input", function() {
     colorChoice = `rgb(${hex2rgb(`${this.value}`)})`;
-    console.log(colorChoice);
 });
 
 
@@ -105,7 +105,8 @@ function getAlpha(color){
     }
 };
 
-
+const confirmBtn = document.querySelector('#slider-button');
+confirmBtn.addEventListener('click',genCanvas);
 
 const penBtn = document.querySelector('#pen');
 penBtn.addEventListener('click',()=>{
