@@ -116,7 +116,8 @@ eraserBtn.addEventListener('click',()=>{
     mode = 'eraser';})
 const clearBtn = document.querySelector('#clear');
 clearBtn.addEventListener('click',()=>{
-    for(let k=0; k<boardUnits.length; k++){
-        boardUnits[k].style.background = 'rgba(255,255,255,0.1)';
+    let pixels = document.querySelectorAll('.pixel')
+    for(let k=0; k<pixels.length; k++){
+        pixels[k].style.background = 'rgba(255,255,255,0.1)';
     };
 });
